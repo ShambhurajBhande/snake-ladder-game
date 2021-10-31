@@ -10,11 +10,18 @@ public class Snake {
     private int start;
     private int end;
 
-    public Snake(final int start, final int end) {
-        this.start = start;
-        this.end = end;
+    public Snake(final int start, final int end) throws Exception {
+        if (isValidPosition(start,end)) {
+            this.start = start;
+            this.end = end;
+        }
     }
 
+    public boolean isValidPosition(int start,int end) throws Exception {
+        if (start > end)
+            return true;
+        else throw new Exception("Snake start position always greater than end position");
+    }
     @Override
     public boolean equals(final Object o) {
         if (this == o) {

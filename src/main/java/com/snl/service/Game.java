@@ -16,9 +16,9 @@ import java.util.Queue;
 @Getter
 @Setter
 public class Game {
-    private int winnerNumber=1;
+    private int winnerNumber;
     private Board board;
-    private Queue<Player> players;
+    private Queue<Player> playerQueue;
     private Map<Integer,Player> winners;
     private Dice dice;
 
@@ -27,12 +27,67 @@ public class Game {
             final List<Player> players,
             final Dice dice) {
         this.board = board;
-        this.players = new ArrayDeque<>(players);
+        this.playerQueue = new ArrayDeque<>(players);
         this.winners = new HashMap<>();
         this.dice = dice;
     }
 
-    public static void main(String[] args) {
+    public Player getNextPlayerToPlay() throws Exception {
+        if(playerQueue.size()<1)
+            throw new Exception("Game is already over...");
+        return playerQueue.poll();
+    }
+
+    public void play(Player player) throws Exception {
+        if(!hasPlayerWon(player)){
+            movePlayer(player,dice.rollDice());
+            updatePlayerPositionAfterGoingThroughSnakeAndLadder(player);
+            updateGameStatus(player);
+        }else
+            throw new Exception("Player already won...");
+    }
+
+    private void updateGameStatus(final Player player) {
+        if (hasPlayerWon(player)) {
+            winners.put(++winnerNumber,player);
+            if (playerQueue.size() == 1) {
+                winners.put(++winnerNumber, playerQueue.poll());
+            }
+        }else {
+            playerQueue.add(player);
+        }
+    }
+
+    private void updatePlayerPositionAfterGoingThroughSnakeAndLadder(final Player player) {
+        for (Snake snake:board.getSnakes()) {
+            if (snake.getStart() == player.getPosition()) {
+                player.setPosition(snake.getEnd());
+                System.out.println("Snake");
+            }
+        }
+
+        for (Ladder ladder:board.getLadders()) {
+            if (ladder.getStart() == player.getPosition()) {
+                player.setPosition(ladder.getEnd());
+                System.out.println("Ladder");
+            }
+        }
+
+    }
+
+    private boolean hasPlayerWon(Player player) {
+        return player.getPosition()==board.getBoardSize();
+
+    }
+
+    private void movePlayer(final Player player,final int rollDice) {
+        int newPosition=player.getPosition()+rollDice;
+        if (newPosition<board.getBoardSize()){
+            player.setPosition(newPosition);
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
         Snake snake=new Snake(30,20);
         Ladder ladder=new Ladder(15,45);
         Player player=new Player(0,"A");
@@ -49,9 +104,29 @@ public class Game {
         snakes.add(snake);
         board.setSnakes(snakes);
 
-        Game game=new Game(board,players,new NormalDice());
-        game.play();
 
+        Game game=new Game(board,players,new NormalDice());
+        Player playerToPlay=game.getNextPlayerToPlay();
+        game.play(playerToPlay);
+        System.out.println(playerToPlay.getPosition());
+        game.play(playerToPlay);
+        System.out.println(playerToPlay.getPosition());
+        game.play(playerToPlay);
+        System.out.println(playerToPlay.getPosition());
+        game.play(playerToPlay);
+        System.out.println(playerToPlay.getPosition());
+        game.play(playerToPlay);
+        System.out.println(playerToPlay.getPosition());
+        game.play(playerToPlay);
+        System.out.println(playerToPlay.getPosition());
+        game.play(playerToPlay);
+        System.out.println(playerToPlay.getPosition());
+        game.play(playerToPlay);
+        System.out.println(playerToPlay.getPosition());
+        game.play(playerToPlay);
+        System.out.println(playerToPlay.getPosition());
+        game.play(playerToPlay);
+        System.out.println(playerToPlay.getPosition());
     }
 
 }

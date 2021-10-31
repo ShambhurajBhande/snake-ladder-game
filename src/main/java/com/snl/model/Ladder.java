@@ -7,12 +7,20 @@ import java.util.Objects;
 @Getter
 @Setter
 public class Ladder {
-        private final int start;
-        private final int end;
+        private int start;
+        private int end;
 
-        public Ladder(final int start, final int end) {
-            this.start = start;
-            this.end = end;
+        public Ladder(final int start, final int end) throws Exception {
+            if (isValidPosition(start,end)) {
+                this.start = start;
+                this.end = end;
+            }
+        }
+
+        public boolean isValidPosition(int start,int end) throws Exception {
+            if (start < end)
+                return true;
+            else throw new Exception("Ladder start position always lesser than end position");
         }
 
         @Override

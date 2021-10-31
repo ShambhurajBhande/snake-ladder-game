@@ -7,8 +7,8 @@ import java.util.Objects;
 @Setter
 @Getter
 public class Player {
-    private final int position;
-    private final String name;
+    private int position;
+    private String name;
 
     public Player(
             final int position,
