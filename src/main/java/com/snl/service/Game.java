@@ -32,19 +32,21 @@ public class Game {
         this.dice = dice;
     }
 
-    public Player getNextPlayerToPlay() throws Exception {
+    public Player getNextPlayerToPlay() {
         if(playerQueue.size()<1)
-            throw new Exception("Game is already over...");
+            System.out.println("Game is already over...");
         return playerQueue.poll();
     }
 
-    public void play(Player player) throws Exception {
-        if(!hasPlayerWon(player)){
-            movePlayer(player,dice.rollDice());
+    public void play(Player player) {
+        if (!hasPlayerWon(player)) {
+            movePlayer(player, dice.rollDice());
             updatePlayerPositionAfterGoingThroughSnakeAndLadder(player);
             updateGameStatus(player);
-        }else
-            throw new Exception("Player already won...");
+        } else {
+            System.out.println("Player already won...");
+        }
+
     }
 
     private void updateGameStatus(final Player player) {
@@ -82,7 +84,7 @@ public class Game {
 
     private void movePlayer(final Player player,final int rollDice) {
         int newPosition=player.getPosition()+rollDice;
-        if (newPosition<board.getBoardSize()){
+        if (newPosition<=board.getBoardSize()){
             player.setPosition(newPosition);
         }
     }
